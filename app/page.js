@@ -1,15 +1,13 @@
 'use client'
-import Image from "next/image";
 import { useState, useEffect} from "react";
 import { firestore } from "@/firebase";
-import {Box , formControlClasses, TextField, Typography, Modal, Stack, Button, ButtonGroup} from "@mui/material";
+import {Box , TextField, Typography, Stack, Button, ButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,} from "@mui/material";
 import { collection,deleteDoc,query,setDoc, getDocs, doc, getDoc} from "firebase/firestore";
 
 
 export default function Home() {
   const [inventory, setInventory] = useState([])
-  const [open, setOpen] = useState(false)
-  const [itemName, setItemName] = useState(' ')
+  const [itemName, setItemName] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
   const updateInventory = async () => {
@@ -60,127 +58,101 @@ export default function Home() {
     updateInventory()
   }, [])
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
   const filteredInventory = inventory.filter(item =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
-  return (
-    <Box width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" gap={2} flexDirection='column'> 
-    <Typography variant="h2"> Inventory Management System</Typography>
 
-  
-    <Modal open={open} onClose={handleClose}>
-      <Box
-      position='absolute'
-      top='50%'
-      left='50%'
-      width={400}
-      bgcolor='white'
-      border='2px solid #000'
-      boxShadow={24}
-      p={4}
-      display='flex'
-      flexDirection='column'
-      gap={3}
-      sx = {{transform:'translate(-50%,-50%)'}}
-      >
-        <Typography variant='h6'>Add Item</Typography>
-        <Stack width='100%' direction='row' spacing={2}>
+  return (
+    
+    <Box width="100vw" height="100vh" display="flex" justifyContent="center" 
+    alignItems="center" gap={2} flexDirection='column'> 
+    <Typography variant="h2"> Pantry Tracker</Typography>
+
+      <Box border='2px solid #333'>
+        <Box width='800px'
+        height='100px'
+        bgcolor='#000435'
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        >
+
+        <Typography variant="h4" color='#f0f0f0' > Pantry Items</Typography>
+        </Box>
+        
+        <Stack width='100%' direction='row' bgcolor='#FFFFFF'>
         <TextField
-        variant='outlined'
-        fullWidth
+        
+        placeholder="Add a new item.."
+        border='1px solid'
         value={itemName}
         onChange={(e) => {
           setItemName(e.target.value)
+
         }}
+        fullWidth
         >
 
         </TextField>
 
         <Button 
-        variant='outlined'
+        variant='contained'
         onClick={() => {
           addItem(itemName)
           setItemName('')
-          handleClose()
         }}>
         Add
         </Button>
 
         </Stack>
-      </Box>
-      
-    </Modal>
-
-
-      <Button
-      variant='contained' onClick={() => {
-        handleOpen()
-      }}
-      >
-       Add New Item
-      </Button>
-
-      <Box border='1px solid #333'>
-        <Box width='800px'
-        height='100px'
-        bgcolor='#ADD8E6'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        >
-        <Typography variant="h3" color='#333' textAlign='center'> Inventory Items</Typography>
-        </Box>
-        
-        
 
         {/* Search Bar */}
+        <Box bgcolor='#FFFFFF'>
+    <TextField 
         
-    <TextField
-        variant="outlined"
+        border='1px solid'
         placeholder="Search Inventory..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         fullWidth
       />
+       </Box>
       
-      
-      <Stack width='800px' height='300px' spacing={2} overflow='auto'>
-        {filteredInventory.map(({name, quantity}) => (
-          <Box
-          key={name}
-          width='100%'
-          minHeight='150px'
-          display='flex'
-          alignItems='center'
-          justifyContent='space-between'
-          //bgcolor='#f0f0f0'
-          padding={5}
-          >
-
-          <Typography variant="h4" color='#333'> 
-          {name.charAt(0).toUpperCase() + name.slice(1)}
-          </Typography>
-
-          <Typography variant="h4" color='#333'> 
-          {quantity}
-          </Typography>
-          
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button onClick={()=>{
-            addItem(name)}}>Add</Button>
-            <Button onClick={()=>{
-            removeItem(name)
-          }}>Remove</Button>
-  
-          </ButtonGroup>
-          
-          </Box> 
-        ))}
-
-      </Stack>
+      <TableContainer component={Paper} style={{ width: '800px', maxHeight: '300px', overflow: 'auto' }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center"><Typography variant="h6" fontWeight='bold'>Item Name</Typography></TableCell>
+              <TableCell align="center"><Typography variant="h6" fontWeight='bold'>Quantity</Typography></TableCell>
+              <TableCell align="center"><Typography variant="h6" fontWeight='bold'>Actions</Typography></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredInventory.map(({ name, quantity }) => (
+              <TableRow key={name}>
+                <TableCell align="center">
+                  <Typography variant="h6" color='#333'>
+                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6" color='#333'>
+                    {quantity}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <ButtonGroup variant="outlined" aria-label="Basic button group">
+                    <Button onClick={() => addItem(name)}>Add</Button>
+                    <Button onClick={() => removeItem(name)}>Remove</Button>
+                  </ButtonGroup>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       </Box>
     </Box>
+  
   )
 }
