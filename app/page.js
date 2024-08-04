@@ -83,7 +83,7 @@ export default function Home() {
 
   return (
     <Box width="100vw" height="100vh" display="flex" justifyContent="center" 
-    alignItems="center" gap={2} flexDirection='column'> 
+    alignItems="center" gap={2} flexDirection='column' paddingTop={5} paddingBottom={5}> 
       <Typography variant="h2">Pantry Tracker</Typography>
 
       <Box border='2px solid #333' borderRadius={2}>
@@ -109,7 +109,7 @@ export default function Home() {
         {/* Search Bar */}
         <Box bgcolor='#FFFFFF'>
           <TextField 
-            placeholder="Search Pantry.."
+            placeholder="Search Pantry..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             fullWidth
