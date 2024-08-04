@@ -4,6 +4,7 @@ import { firestore } from "@/firebase";
 import { Box, TextField, Typography, Stack, Button, ButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Modal, Fade, Backdrop } from "@mui/material";
 import { collection, deleteDoc, query, setDoc, getDocs, doc, getDoc } from "firebase/firestore";
 import OpenAI from "openai";
+import { Analytics } from "@vercel/analytics/react"
 
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
