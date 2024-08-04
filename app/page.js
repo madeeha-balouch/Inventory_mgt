@@ -109,7 +109,7 @@ export default function Home() {
         {/* Search Bar */}
         <Box bgcolor='#FFFFFF'>
           <TextField 
-            placeholder="Search Pantry..."
+            placeholder="Search Pantry.."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             fullWidth
